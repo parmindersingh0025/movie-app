@@ -56,7 +56,7 @@ const SearchScreen = ({ navigation }) => {
     //         });
     // };
 
-    const getMoviesFromApi = async (item) =>{
+    async function getMoviesFromApi(item){
         console.log('await item ',item)
 
         const response = await fetch(item)
