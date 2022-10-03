@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, Text, FlatList, TouchableOpacity, LogBox } from 'react-native'
 import BottomPopUp from '../component/BottomPopUp'
 import MovieComponent from '../component/MovieComponent'
-// import { ProgressLoader } from '../component/ProgressLoader'
+import { ProgressLoader } from '../component/ProgressLoader'
 import SearchComponent from '../component/SearchComponent'
 import SelectOptionList from '../component/SelectionOptionList'
 
@@ -67,9 +67,9 @@ const MovieScreen = ({ navigation }) => {
     }
     return (
         <View style={styles.container}>
-            {/* <ProgressLoader
+            <ProgressLoader
                 isVisible={isVisible}
-            /> */}
+            />
             <SearchComponent
                 onPress={() => showPopUp()}
                 movieSelection={movieSelection}

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, Text, FlatList, TouchableOpacity, TextInput, Image, LogBox } from 'react-native'
 import BottomPopUp from '../component/BottomPopUp'
 import MovieComponent from '../component/MovieComponent'
-// import { ProgressLoader } from '../component/ProgressLoader'
+import { ProgressLoader } from '../component/ProgressLoader'
 import SearchComponent from '../component/SearchComponent'
 import SelectOptionList from '../component/SelectionOptionList'
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
@@ -26,6 +26,7 @@ const SearchScreen = ({ navigation }) => {
     const [callApi, setCallApi] = useState(false)
 
     useEffect(() => {
+        setIsVisible(false)
         LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
         if (callApi) {
             getMoviesFromApi();
@@ -95,18 +96,11 @@ const SearchScreen = ({ navigation }) => {
         }
 
     }
-    const validationError = (item) => {
-        if (item != '') {
-            setCheckvalidation(true)
-        } else {
-            setCheckvalidation(false)
-        }
-    }
     return (
         <View style={styles.container}>
-            {/* <ProgressLoader
+            <ProgressLoader
                 isVisible={isVisible}
-            /> */}
+            />
             <Text style={{ marginLeft: 20, fontSize: 18 }}>Search Movie/Tv Show Name</Text>
             <View style={{ backgroundColor: 'lightgray', width: '90%', alignSelf: 'center', margin: 10, flexDirection: 'row', alignItems: 'center', height: 40 }}>
                 <EvilIcons size={26} color="gray" name="search" style={{ left: 10 }} />
