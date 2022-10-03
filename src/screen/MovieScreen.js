@@ -31,18 +31,33 @@ const MovieScreen = ({ navigation }) => {
         setToValue(1)
     }
     const getMoviesFromApi = (item) => {
+        console.log('response.json     122333',item)
         setIsVisible(true)
-        return fetch(item ? item : 'https://api.themoviedb.org/3/search/movie?api_key=502943dc438dc0caf85eb7b3717b1a10&language=en-US&query=body&page=1')
-            .then((response) => response.json())
+        return fetch('https://api.themoviedb.org/3/search/movie?api_key=502943dc438dc0caf85eb7b3717b1a10&language=en-US&query=body&page=1')
+            .then((response) => {response.json()
+            console.log('await response ',response.json())
+        })
             .then((json) => {
+                console.log('awaitjson ',json)
+
                 setIsVisible(false)
                 setMovieList(json.results)
             })
             .catch((error) => {
+                console.log('errorresponse ',error)
+
                 console.error(error);
             });
     };
+    // const getMoviesFromApi = async (item) =>{
+    //     console.log('await item ',item)
+
+    //     const response = await fetch(item)
+    //     console.log('await response ',response)
+    // } 
+
     const filterMovie = (item) => {
+        console.log('filterMovie movie ',item)
         if (item === 'now_playing') {
             getMoviesFromApi('https://api.themoviedb.org/3/search/movie?api_key=502943dc438dc0caf85eb7b3717b1a10&language=en-US&query=body&page=1')
             setMovieSelection(item)
@@ -67,9 +82,9 @@ const MovieScreen = ({ navigation }) => {
     }
     return (
         <View style={styles.container}>
-            <ProgressLoader
+            {/* <ProgressLoader
                 isVisible={isVisible}
-            />
+            /> */}
             <SearchComponent
                 onPress={() => showPopUp()}
                 movieSelection={movieSelection}

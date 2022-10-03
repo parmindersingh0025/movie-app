@@ -39,23 +39,32 @@ const SearchScreen = ({ navigation }) => {
     const showPopUp = () => {
         setToValue(1)
     }
-    const getMoviesFromApi = (item) => {
-        setIsVisible(true)
-        return fetch(item ? item : '')
-            .then((response) => response.json())
-            .then((json) => {
-                console.log("json==", json.results)
-                setIsVisible(false)
-                // return json.results;
-                setMovieList(json.results)
-                setFilterData(json.results)
-            })
-            .catch((error) => {
-                console.error(error);
-                setIsVisible(false)
-            });
-    };
+    // const getMoviesFromApi = (item) => {
+    //     setIsVisible(true)
+    //     return fetch(item ? item : '')
+    //         .then((response) => response.json())
+    //         .then((json) => {
+    //             console.log("json==", json.results)
+    //             setIsVisible(false)
+    //             // return json.results;
+    //             setMovieList(json.results)
+    //             setFilterData(json.results)
+    //         })
+    //         .catch((error) => {
+    //             console.error(error);
+    //             setIsVisible(false)
+    //         });
+    // };
+
+    const getMoviesFromApi = async (item) =>{
+        console.log('await item ',item)
+
+        const response = await fetch(item)
+        console.log('await response ',response)
+    } 
+
     const filterMovie = (item) => {
+        console.log('filterMovie search ',item)
         if (item === 'movie') {
             getMoviesFromApi('https://api.themoviedb.org/3/search/movie?api_key=502943dc438dc0caf85eb7b3717b1a10&language=en-US&query=body&page=1')
             setMovieSelection(item)
@@ -98,9 +107,9 @@ const SearchScreen = ({ navigation }) => {
     }
     return (
         <View style={styles.container}>
-            <ProgressLoader
+            {/* <ProgressLoader
                 isVisible={isVisible}
-            />
+            /> */}
             <Text style={{ marginLeft: 20, fontSize: 18 }}>Search Movie/Tv Show Name</Text>
             <View style={{ backgroundColor: 'lightgray', width: '90%', alignSelf: 'center', margin: 10, flexDirection: 'row', alignItems: 'center', height: 40 }}>
                 <EvilIcons size={26} color="gray" name="search" style={{ left: 10 }} />
