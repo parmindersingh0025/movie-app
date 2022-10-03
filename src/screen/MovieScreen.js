@@ -33,7 +33,7 @@ const MovieScreen = ({ navigation }) => {
     const getMoviesFromApi = (item) => {
         console.log('response.json     122333',item)
         setIsVisible(true)
-        return fetch('https://api.themoviedb.org/3/search/movie?api_key=502943dc438dc0caf85eb7b3717b1a10&language=en-US&query=body&page=1')
+        return fetch(item ? item : 'https://api.themoviedb.org/3/search/movie?api_key=502943dc438dc0caf85eb7b3717b1a10&language=en-US&query=body&page=1')
             .then((response) => {response.json()
             console.log('await response ',response.json())
         })
