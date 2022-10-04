@@ -4,6 +4,8 @@ import BottomPopUp from '../component/BottomPopUp'
 import MovieComponent from '../component/MovieComponent'
 import { ProgressLoader } from '../component/ProgressLoader'
 import SearchComponent from '../component/SearchComponent'
+import axios from "axios";
+
 
 const popUpList = [
     { heading: 'airing_today' },
@@ -16,12 +18,12 @@ const TvScreen = ({ navigation }) => {
     const [movieList, setMovieList] = useState([])
     const [toValue, setToValue] = useState(0)
     const [isVisible, setIsVisible] = useState(true)
-    const [movieSelection, setMovieSelection] = useState("Popular")
+    const [movieSelection, setMovieSelection] = useState("popular")
     const [select, setSelect] = useState('')
 
     useEffect(() => {
         LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
-        getMoviesFromApi();
+        getMoviesFromApi("https://api.themoviedb.org/3/tv/popular?api_key=502943dc438dc0caf85eb7b3717b1a10&language=en-US&page=1");
     }, [])
     const handleClose = () => {
         toValue == 1 && setToValue({ toValue: 0, openModal: false })
@@ -46,32 +48,55 @@ const TvScreen = ({ navigation }) => {
     //         });
     // };
 
-    const getMoviesFromApi = async (item) =>{
-        console.log('await item ',item)
+    // const getMoviesFromApi =  (item) =>{
+    //     console.log('await item ',item)
+    //     const response = axios.get(item)
+    //     console.log('RESPONSE', response)
+    // } 
 
-        const response = await fetch(item)
-        console.log('await response ',response)
-    } 
+    function getMoviesFromApi(item) {
+        console.log("await item ", item);
+        // const response = axios.get(item)
+        axios.get(item)
+        //   .get("https://api.themoviedb.org/3/search/movie?api_key=502943dc438dc0caf85eb7b3717b1a10&language=en-US&query=body&page=1")
+        .then((data) => {
+            setIsVisible(false);
+            setMovieList(data.data.results);
+            console.log("data  ", data);
+          })
+          .catch((error) => console.log(error));
+        // console.log('RESPONSE   ', response.results)
+      }
+    
+
+    // async function getMoviesFromApi(item){
+    //     console.log('await item ',item)
+
+    //     const response = await fetch(item)
+    //     console.log('await response ',response)
+    // } 
+
+
 
     const filterMovie = (item) => {
         console.log('filterMovie tv ',item)
         if (item === 'airing_today') {
-            getMoviesFromApi('https://api.themoviedb.org/3/tv/airing_today?api_key=502943dc438dc0caf85eb7b3717b1a10&language=en-US&page=1')
+            getMoviesFromApi("https://api.themoviedb.org/3/tv/airing_today?api_key=502943dc438dc0caf85eb7b3717b1a10&language=en-US&page=1")
             setMovieSelection(item)
             setSelect(item)
             setToValue(0)
         } else if (item === 'on_the_air') {
-            getMoviesFromApi('https://api.themoviedb.org/3/tv/on_the_air?api_key=502943dc438dc0caf85eb7b3717b1a10&language=en-US&page=1')
+            getMoviesFromApi("https://api.themoviedb.org/3/tv/on_the_air?api_key=502943dc438dc0caf85eb7b3717b1a10&language=en-US&page=1")
             setMovieSelection(item)
             setSelect(item)
             setToValue(0)
         } else if (item === 'popular') {
-            getMoviesFromApi('https://api.themoviedb.org/3/tv/popular?api_key=502943dc438dc0caf85eb7b3717b1a10&language=en-US&page=1')
+            getMoviesFromApi("https://api.themoviedb.org/3/tv/popular?api_key=502943dc438dc0caf85eb7b3717b1a10&language=en-US&page=1")
             setMovieSelection(item)
             setSelect(item)
             setToValue(0)
         } else if (item === 'top_rated') {
-            getMoviesFromApi('https://api.themoviedb.org/3/tv/top_rated?api_key=502943dc438dc0caf85eb7b3717b1a10&language=en-US&page=1')
+            getMoviesFromApi("https://api.themoviedb.org/3/tv/top_rated?api_key=502943dc438dc0caf85eb7b3717b1a10&language=en-US&page=1")
             setMovieSelection(item)
             setSelect(item)
             setToValue(0)
@@ -95,7 +120,7 @@ const TvScreen = ({ navigation }) => {
                             popularity={item.popularity}
                             release_date={item.release_date}
                             poster_path={item.poster_path}
-                            onPress={() => navigation.navigate('Movie details', { original_title: item.original_name, overview: item.overview })}
+                            onPress={() => navigation.navigate('Movie details', { original_title: item.original_name, overview: item.overview,poster_path:item.poster_path })}
                         />
                     )
                 }}

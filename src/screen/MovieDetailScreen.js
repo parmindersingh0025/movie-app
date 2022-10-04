@@ -2,13 +2,14 @@ import React from 'react'
 import { StyleSheet, View, Text, Image } from 'react-native'
 
 const MovieDetailScreen = ({ route }) => {
-    console.log("route", route.params.overview)
+    console.log("routeparams params", route.params.poster_path)
+    console.log("routeaaaaaaaaaaaaaa    ", route)
     return (
         <View style={styles.container}>
             <Text style={styles.titleText}>{route?.params?.original_title}</Text>
             <Image
                 style={styles.imageView}
-                source={{ uri: 'https://media.gettyimages.com/photos/captain-america-the-first-avenger-movie-poster-picture-id458467163?s=612x612' }}
+                source={{ uri: 'https://image.tmdb.org/t/p/w154'+ route.params.poster_path }}
             />
             <Text style={{ margin: 30, fontSize: 15, color: 'gray' }}>{route.params.overview}</Text>
         </View>

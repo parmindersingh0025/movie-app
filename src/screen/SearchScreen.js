@@ -7,6 +7,7 @@ import SearchComponent from '../component/SearchComponent'
 import SelectOptionList from '../component/SelectionOptionList'
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import axios from 'axios'
 
 const popUpList = [
     { heading: 'movie' },
@@ -33,6 +34,17 @@ const SearchScreen = ({ navigation }) => {
         }
 
     }, [])
+    useEffect(()=>{
+        const newData = movieList.filter((item) => {
+            const itemData = item.original_title ? item.original_title.toUpperCase() : ''.toUpperCase();
+            const textData = text.toUpperCase();
+            filterMovie(item);
+            return itemData.indexOf(textData) > -1
+        })
+        setFilterData(newData);
+        setSearch('')
+        console.log('newDatanewData ',newData)
+    },[movieList])
     const handleClose = () => {
         toValue == 1 && setToValue({ toValue: 0, openModal: false })
     }
@@ -56,29 +68,51 @@ const SearchScreen = ({ navigation }) => {
     //         });
     // };
 
-    async function getMoviesFromApi(item){
-        console.log('await item ',item)
+    // async function getMoviesFromApi(item){
+    //     console.log('await item ',item)
 
-        const response = await fetch(item)
-        console.log('await response ',response)
-    } 
+    //     const response = await fetch(item)
+    //     console.log('await response ',response)
+    // } 
+    
+    // const getMoviesFromApi = (item) =>{
+    //     console.log('await item ',item)
+    //     const response = axios.get(item)
+    //     console.log('RESPONSE', response)
+    // } 
+
+    function getMoviesFromApi(item) {
+        console.log("await item ", item);
+        // const response = axios.get(item)
+        axios.get(item)
+        //   .get("https://api.themoviedb.org/3/search/movie?api_key=502943dc438dc0caf85eb7b3717b1a10&language=en-US&query=body&page=1")
+        .then((data) => {
+            setIsVisible(false);
+            setMovieList(data.data.results);
+            setFilterData(data.data.results)
+            console.log("data  ", data.data.results);
+          })
+          .catch((error) => console.log(error));
+        // console.log('RESPONSE   ', response.results)
+      }
+    
 
     const filterMovie = (item) => {
         console.log('filterMovie search ',item)
         if (item === 'movie') {
-            getMoviesFromApi('https://api.themoviedb.org/3/search/movie?api_key=502943dc438dc0caf85eb7b3717b1a10&language=en-US&query=body&page=1')
+            getMoviesFromApi(`https://api.themoviedb.org/3/search/movie?api_key=502943dc438dc0caf85eb7b3717b1a10&language=en-US&query=${search}&page=1`)
             setMovieSelection(item)
             setSelect(item)
             setToValue(0)
             setCallApi(true)
         } else if (item === 'multi') {
-            getMoviesFromApi('https://api.themoviedb.org/3/search/multi?api_key=502943dc438dc0caf85eb7b3717b1a10&language=en-US&query=king&page=1')
+            getMoviesFromApi(`https://api.themoviedb.org/3/search/multi?api_key=502943dc438dc0caf85eb7b3717b1a10&language=en-US&query=${search}&page=1`)
             setMovieSelection(item)
             setSelect(item)
             setToValue(0)
             setCallApi(true)
         } else if (item === 'tv') {
-            getMoviesFromApi('https://api.themoviedb.org/3/search/tv?api_key=502943dc438dc0caf85eb7b3717b1a10&language=en-US&page=1&query=war&include_adult=false')
+            getMoviesFromApi(`https://api.themoviedb.org/3/search/tv?api_key=502943dc438dc0caf85eb7b3717b1a10&language=en-US&page=1&query=${search}&include_adult=false`)
             setMovieSelection(item)
             setSelect(item)
             setToValue(0)
@@ -90,14 +124,11 @@ const SearchScreen = ({ navigation }) => {
     }
     const searchFilter = (text) => {
         if (text) {
+            getMoviesFromApi(`https://api.themoviedb.org/3/search/movie?api_key=502943dc438dc0caf85eb7b3717b1a10&language=en-US&query=${text}&page=1`)
+            
             setCheckvalidation(false)
-            const newData = movieList.filter((item) => {
-                const itemData = item.original_title ? item.original_title.toUpperCase() : ''.toUpperCase();
-                const textData = text.toUpperCase();
-                return itemData.indexOf(textData) > -1
-            })
-            setFilterData(newData);
-            setSearch('')
+            setSearch(text)
+            
         } else {
             setFilterData(movieList)
             setSearch('')
@@ -130,8 +161,8 @@ const SearchScreen = ({ navigation }) => {
                     onPress={() => showPopUp()}
                     movieSelection={movieSelection}
                 />
-                <TouchableOpacity onPress={() => searchFilter(search)} style={{ backgroundColor: 'skyblue', height: 40, width: 100, justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
-                    <EvilIcons size={26} color="gray" name="search" style={{}} />
+                <TouchableOpacity onPress={() => { console.log('searcssssh  ',search); searchFilter(search)}} style={{ backgroundColor: 'skyblue', height: 40, width: 100, justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
+                    <EvilIcons size={26} color="white" name="search" style={{}} />
                     <Text style={{ color: 'white' }}>Search</Text>
                 </TouchableOpacity>
 
@@ -146,7 +177,7 @@ const SearchScreen = ({ navigation }) => {
                             popularity={item.popularity}
                             release_date={item.release_date}
                             poster_path={item.poster_path}
-                            onPress={() => navigation.navigate('Movie details', { original_title: item.original_title, overview: item.overview })}
+                            onPress={() => navigation.navigate('Movie details', { original_title: item.original_title, overview: item.overview, poster_path: item.poster_path })}
                         />
                     )
                 }}
@@ -160,7 +191,7 @@ const SearchScreen = ({ navigation }) => {
                     keyExtractor={item => item.id}
                     renderItem={({ item }) => {
                         return (
-                            <TouchableOpacity onPress={() => filterMovie(item.heading)} style={[styles.filterButton, { backgroundColor: item.heading === select ? "#32CD32" : 'white' }]}>
+                            <TouchableOpacity style={[styles.filterButton, { backgroundColor: item.heading === select ? "#32CD32" : 'white' }]}>
                                 <Text style={[styles.filterText, {}]}>{item.heading}</Text>
                             </TouchableOpacity>
                         )

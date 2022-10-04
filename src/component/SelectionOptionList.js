@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity, SectionList, StyleSheet } from 'react-native';
 import React from 'react';
-const SelectOptionList = ({ data, filterMovie, select }) => {
+const SelectOptionList = ({ data, filterMovie, select    }) => {
     return (
         <View style={{ margin: 30 }}>
             {data.map((item) => {

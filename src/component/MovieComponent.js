@@ -7,7 +7,7 @@ const MovieComponent = ({ original_title, popularity, release_date, onPress, pos
             <View>
                 <Image
                     style={styles.imageView}
-                    source={{ uri: 'https://media.gettyimages.com/photos/captain-america-the-first-avenger-movie-poster-picture-id458467163?s=612x612' }}
+                    source={{ uri: 'https://image.tmdb.org/t/p/w154'+ poster_path }}
                 />
             </View>
             <View style={styles.textContainer}>
